@@ -19,7 +19,12 @@ async function TodoStream({ date, page = 1 }: { date: Date; page?: number }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <TodoList todos={dataSerialization(todos)} />
+      <TodoList
+        todos={dataSerialization(
+          // @ts-ignore
+          todos
+        )}
+      />
       <Pagination>
         <PaginationContent>
           {/* [PERVIOUS] */}

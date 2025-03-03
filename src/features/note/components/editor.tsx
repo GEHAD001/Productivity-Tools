@@ -1,28 +1,36 @@
 "use client";
-import { Block } from "@blocknote/core";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useEffect, useState } from "react";
 import { storeNoteAction } from "../actions/storeNoteAction";
-import { useDebounce } from "@uidotdev/usehooks";
 
-export default function Editor({ note }: { note: string }) {
+export default function Editor({
+  noteId,
+  noteContent,
+  noteDate,
+}: {
+  noteId?: string;
+  noteContent: string;
+  noteDate: Date;
+}) {
   // Creates a new editor instance.
-  const editor = useCreateBlockNote({ initialContent: JSON.parse(note) });
-  const [blocks, setBlocks] = useState<Block[]>([]);
-  const blocksUpdated = useDebounce(blocks, 800);
-
-  useEffect(() => {
-    if (blocksUpdated) {
-      storeNoteAction({
-        id: "67c2fdd78fc8ca1530279b8e",
-        note: JSON.stringify(editor.document),
-      });
-    }
-  }, [blocksUpdated]);
+  const editor = useCreateBlockNote({
+    initialContent: JSON.parse(noteContent),
+  });
 
   // Renders the editor instance using a React component.
-  return <BlockNoteView editor={editor} theme={"light"} />;
+  return (
+    <BlockNoteView
+      editor={editor}
+      theme={"light"}
+      onChange={() => {
+        storeNoteAction({
+          id: noteId,
+          note: JSON.stringify(editor.document),
+          date: noteDate,
+        });
+      }}
+    />
+  );
 }

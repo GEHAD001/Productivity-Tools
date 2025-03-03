@@ -13,10 +13,12 @@ declare global {
   const mongoose: Mongoose;
 }
 
+// @ts-ignore
 let cached = global.mongoose;
 
 // connection structure, conn contain connectio, promise contain function that create connection
 if (!cached) {
+  // @ts-ignore
   cached = global.mongoose = { conn: null, promise: null };
 }
 

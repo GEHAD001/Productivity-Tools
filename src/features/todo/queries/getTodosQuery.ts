@@ -1,11 +1,11 @@
 "use server";
 
 import connectToDB from "@/database/connection";
-import Todo from "@/database/models/Todo";
+import Todo, { TodoType } from "@/database/models/Todo";
 
 export interface GetTodosResponse {
   success: boolean;
-  data?: any;
+  data?: TodoType[];
   error?: string;
   totalPages?: number;
   currentPage?: number;

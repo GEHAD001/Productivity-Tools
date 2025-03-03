@@ -7,11 +7,15 @@ import User from "@/database/models/User";
 
 export interface StoreNoteActionParams {
   id?: string;
+  date: Date;
   note: string;
 }
 
-export async function storeNoteAction({ id, note }: StoreNoteActionParams) {
-  console.log("Trigger");
+export async function storeNoteAction({
+  id,
+  date,
+  note,
+}: StoreNoteActionParams) {
   try {
     await connectToDB();
     const userId = (await User.find()).at(0)._id;
@@ -20,7 +24,7 @@ export async function storeNoteAction({ id, note }: StoreNoteActionParams) {
       // Update existing note
       const updatedNote = await Note.findByIdAndUpdate(
         id,
-        { note },
+        { note, date },
         { new: true }
       );
 
@@ -37,7 +41,7 @@ export async function storeNoteAction({ id, note }: StoreNoteActionParams) {
     }
 
     // Create new note
-    const newNote = await Note.create({ note, user: userId });
+    const newNote = await Note.create({ note, user: userId, date });
 
     revalidatePath("/");
     return {

@@ -12,9 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DatePickerWithContext, DateProvider } from "@/context/DateProvider";
-
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+import React from "react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Sidebar({ className }: SidebarProps) {
+function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const pathname = usePathname();
 
   const tools = [
@@ -35,7 +33,7 @@ function Sidebar({ className }: SidebarProps) {
       href: "/app/todo",
     },
     {
-      label: "Notes",
+      label: "Daily Note",
       icon: FileTextIcon,
       href: "/app/notes",
     },

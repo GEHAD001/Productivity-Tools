@@ -5,10 +5,12 @@ const noteSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    default: "",
   },
-  inDate: {
+  date: {
     type: Date,
     default: Date.now,
+    index: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
