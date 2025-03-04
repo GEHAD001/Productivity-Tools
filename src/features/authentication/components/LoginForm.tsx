@@ -23,6 +23,8 @@ import {
   LoginFormFields,
   loginFormValidator,
 } from "../schemas/LoginFormFields";
+import { loginUserAction } from "../actions/loginUserAction";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm({
@@ -37,11 +39,17 @@ export default function LoginForm({
     resolver: zodResolver(loginFormValidator),
     defaultValues,
   });
+
   const router = useRouter();
 
-  function onSubmit(values: LoginFormFields) {
-    console.log(values.username, values.password);
-    router.replace("/app/todo");
+  async function onSubmit(values: LoginFormFields) {
+    const result = await loginUserAction(values);
+    if (result.success && result.redirect) {
+      router.replace(result.redirect);
+    }
+    if (!result.success) {
+      toast.error(result.message);
+    }
   }
 
   return (

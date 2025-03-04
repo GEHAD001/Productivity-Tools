@@ -23,6 +23,9 @@ import {
   RegisterFormFields,
   registerFormValidator,
 } from "../schemas/RegisterFormFields";
+import { registerUserAction } from "../actions/registerUserAction";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm({
   defaultValues = {
@@ -39,8 +42,16 @@ export default function RegisterForm({
     defaultValues,
   });
 
-  function onSubmit(values: RegisterFormFields) {
-    console.log(values);
+  const router = useRouter();
+
+  async function onSubmit(values: RegisterFormFields) {
+    const result = await registerUserAction(values);
+    if (result.success && result.redirect) {
+      router.replace(result.redirect);
+    }
+    if (!result.success) {
+      toast.error(result.message);
+    }
   }
 
   return (

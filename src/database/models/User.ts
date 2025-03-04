@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
+  active: {
+    type: Boolean,
+    default: true, // TODO: make it false after build real auth system
+  },
   createdAt: {
     type: Date,
     default: Date.now,
