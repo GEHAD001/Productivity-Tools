@@ -16,7 +16,7 @@ export default function CardList({ cards }: CardListProps) {
       {cards.map((card) => (
         <div
           key={card._id}
-          className="group h-full rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1"
+          className="group h-full rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-xs hover:shadow-md transition-all duration-200 transform hover:-translate-y-1"
         >
           <div className="flex flex-col h-full justify-between gap-4">
             <div className="space-y-4">

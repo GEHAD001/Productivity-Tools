@@ -102,7 +102,7 @@ export default function LoginForm({
 
               {/* [Form Actions] */}
               <Button
-                className="w-full bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 rounded-md px-3"
+                className="w-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-9 rounded-md px-3"
                 type="submit"
               >
                 Login

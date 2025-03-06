@@ -16,7 +16,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { DatePicker } from "@/components/ui/date-picker";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TodoFormFields, todoFormValidator } from "../schemas/TodoFormFields";
@@ -26,6 +26,7 @@ import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export default function TodoForm() {
   const searchParams = useSearchParams();
