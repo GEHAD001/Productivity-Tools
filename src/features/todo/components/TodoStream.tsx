@@ -10,12 +10,22 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-async function TodoStream({ date, page = 1 }: { date: Date; page?: number }) {
+async function TodoStream({
+  userId,
+  date,
+  page = 1,
+}: {
+  userId: string;
+  date: Date;
+  page?: number;
+}) {
   const {
     data: todos,
     totalPages = 1,
     currentPage = 1,
-  } = await getTodosByDateQuery(date, page);
+  } = await getTodosByDateQuery(userId, date, page);
+
+  console.log(todos);
 
   return (
     <div className="flex flex-col gap-4">

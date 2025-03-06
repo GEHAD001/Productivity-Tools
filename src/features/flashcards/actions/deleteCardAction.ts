@@ -1,11 +1,13 @@
 "use server";
 
 import Card from "@/database/models/Cards";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 import { revalidatePath } from "next/cache";
 
 export async function deleteCardAction(cardId: string) {
   try {
-    const card = await Card.findById(cardId);
+    const user = await getCurrentUser();
+    const card = await Card.findOne({ _id: cardId, user: user!.userId });
 
     if (!card) {
       return {

@@ -1,20 +1,16 @@
 "use server";
 
-import User from "@/database/models/User";
 import { createTodoQuery } from "../queries/createTodoQuery";
 import { TodoFormFields } from "../schemas/TodoFormFields";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export async function createTodoAction(data: TodoFormFields) {
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
-
   try {
-    // TODO: Get actual user ID from session
-    const userId = (await User.find()).at(0)._id;
-
+    const user = await getCurrentUser();
     const result = await createTodoQuery({
       ...data,
-      userId,
+      userId: user!.userId,
     });
 
     if (!result.success) {

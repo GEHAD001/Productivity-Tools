@@ -25,13 +25,18 @@ import { toast } from "sonner";
 import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function TodoForm() {
+  const searchParams = useSearchParams();
+
+  const dateParam = searchParams.get("date");
+
   const form = useForm<TodoFormFields>({
     resolver: zodResolver(todoFormValidator),
     defaultValues: {
       task: "",
-      date: new Date(),
+      date: dateParam ? new Date(dateParam) : new Date(),
     },
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);

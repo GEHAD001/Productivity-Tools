@@ -10,15 +10,19 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 async function FlashcardStream({ page = 1 }: { page?: number }) {
+  const user = await getCurrentUser();
+
+  // Error: Recursion Rendering
   const {
     data: flashcards,
     totalPages = 1,
     currentPage = 1,
-  } = await getFlashcardsQuery(page);
+  } = await getFlashcardsQuery(user!.userId, page);
 
-  if (page > totalPages) redirect("/app/flashcards");
+  if (totalPages && page > totalPages) redirect("/app/flashcards");
 
   return (
     <div className="flex flex-col gap-4">

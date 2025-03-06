@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { CardFormFields, cardFormValidator } from "../schemas/CardFormFields";
 import connectToDB from "@/database/connection";
 import Card from "@/database/models/Cards";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export async function updateCardAction({
   values,
@@ -14,6 +15,8 @@ export async function updateCardAction({
 }) {
   try {
     await connectToDB();
+
+    const user = await getCurrentUser();
 
     // Validate the provided fields
     const validatedFields = cardFormValidator.partial().safeParse(values);
@@ -26,9 +29,9 @@ export async function updateCardAction({
     }
 
     // Find and update the card
-    const updatedCard = await Card.findByIdAndUpdate(
-      cardId,
-      { $set: validatedFields.data },
+    const updatedCard = await Card.findOneAndUpdate(
+      { _id: cardId, user: user!.userId },
+      validatedFields.data,
       { new: true }
     );
 

@@ -1,13 +1,21 @@
-import { jwtVerify } from "jose";
+import { JWTPayload, jwtVerify } from "jose";
 import { encodedKey } from "./keys";
+import { Payload } from "./types";
 
-export async function decrypt(session: string | undefined = "") {
+export async function decrypt(
+  session: string | undefined = ""
+): Promise<(Payload & JWTPayload) | undefined> {
   try {
-    const { payload } = await jwtVerify(session, encodedKey, {
-      algorithms: ["HS256"],
-    });
+    const { payload }: { payload: Payload & JWTPayload } = await jwtVerify(
+      session,
+      encodedKey,
+      {
+        algorithms: ["HS256"],
+      }
+    );
+
     return payload;
   } catch {
-    console.log("Failed to verify session");
+    return undefined;
   }
 }

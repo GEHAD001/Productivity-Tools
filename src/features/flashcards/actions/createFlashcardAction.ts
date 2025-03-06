@@ -6,12 +6,12 @@ import {
   flashcardFormValidator,
 } from "../schemas/FlashcardFormFields";
 import connectToDB from "@/database/connection";
-import User from "@/database/models/User";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export async function createFlashcardAction(values: FlashcardFormFields) {
   try {
     await connectToDB();
-    const userId = (await User.find()).at(0)._id;
+    const user = await getCurrentUser();
     const validatedFields = flashcardFormValidator.safeParse(values);
 
     if (!validatedFields.success) {
@@ -24,7 +24,7 @@ export async function createFlashcardAction(values: FlashcardFormFields) {
     const result = await createFlashcard({
       name: validatedFields.data.name,
       visibility: validatedFields.data.visibility,
-      userId,
+      userId: user!.userId,
     });
 
     if (!result.success) {

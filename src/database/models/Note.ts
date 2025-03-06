@@ -5,7 +5,12 @@ const noteSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    default: "",
+    default: JSON.stringify([
+      {
+        type: "heading",
+        content: `Your note for ${new Date().toLocaleDateString()}`,
+      },
+    ]),
   },
   date: {
     type: Date,

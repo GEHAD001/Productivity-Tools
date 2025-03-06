@@ -1,19 +1,23 @@
 import { encodedKey } from "./keys";
 import { SignJWT } from "jose";
-export interface SessionPayload {
-  iss?: string;
-  sub?: string;
-  aud?: string | string[];
-  jti?: string;
-  nbf?: number;
-  exp?: number;
-  iat?: number;
-  [propName: string]: unknown;
-}
-export async function encrypt(payload: SessionPayload) {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(encodedKey);
+
+export async function encrypt(
+  userId: string,
+  username: string,
+  expiresAt: Date
+): Promise<string> {
+  try {
+    if (!encodedKey) {
+      throw new Error("Session secret is not configured");
+    }
+
+    return await new SignJWT({ userId, username, expiresAt })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("7d")
+      .sign(encodedKey);
+  } catch (error) {
+    console.error("Failed to encrypt payload:", error);
+    throw error;
+  }
 }

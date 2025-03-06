@@ -3,16 +3,16 @@ import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { storeNoteAction } from "../actions/storeNoteAction";
+import { updateNoteAction } from "../actions/updateNoteAction";
 
 export default function Editor({
   noteId,
+  userId,
   noteContent,
-  noteDate,
 }: {
-  noteId?: string;
+  noteId: string;
+  userId: string;
   noteContent: string;
-  noteDate: Date;
 }) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
@@ -25,10 +25,10 @@ export default function Editor({
       editor={editor}
       theme={"light"}
       onChange={() => {
-        storeNoteAction({
-          id: noteId,
+        updateNoteAction({
+          noteId,
+          userId,
           note: JSON.stringify(editor.document),
-          date: noteDate,
         });
       }}
     />

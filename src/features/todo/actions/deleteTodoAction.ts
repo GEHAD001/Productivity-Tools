@@ -1,5 +1,6 @@
 "use server";
 
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 import { deleteTodoQuery } from "../queries/deleteTodoQuery";
 import { revalidatePath } from "next/cache";
 
@@ -8,9 +9,9 @@ export async function deleteTodoAction(todoId: string): Promise<{
   message: string;
   data?: object | string;
 }> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const user = await getCurrentUser();
   try {
-    const result = await deleteTodoQuery(todoId);
+    const result = await deleteTodoQuery(user!.userId, todoId);
 
     if (!result.success) {
       return { error: true, message: result.error ?? "error in db" };

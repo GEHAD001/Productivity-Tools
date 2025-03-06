@@ -24,6 +24,7 @@ export async function getAllTodosQuery(): Promise<GetTodosResponse> {
 }
 
 export async function getTodosByDateQuery(
+  userId: string,
   date: Date,
   page: number = 1,
   limit: number = 5
@@ -38,14 +39,17 @@ export async function getTodosByDateQuery(
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
+    console.log(userId);
+
     const query = {
+      user: userId,
       date: {
         $gte: startOfDay,
         $lte: endOfDay,
       },
     };
-
     const totalTodos = await Todo.countDocuments(query);
+
     const totalPages = Math.ceil(totalTodos / limit);
     const skip = (page - 1) * limit;
 

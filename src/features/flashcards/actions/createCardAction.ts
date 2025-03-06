@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createCard } from "../queries/createCardQuery";
 import { CardFormFields, cardFormValidator } from "../schemas/CardFormFields";
 import connectToDB from "@/database/connection";
-import User from "@/database/models/User";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export async function createCardAction(
   values: CardFormFields,
@@ -12,7 +12,7 @@ export async function createCardAction(
 ) {
   try {
     await connectToDB();
-    const userId = (await User.find()).at(0)._id;
+    const user = await getCurrentUser();
     const validatedFields = cardFormValidator.safeParse(values);
 
     if (!validatedFields.success) {
@@ -28,7 +28,7 @@ export async function createCardAction(
       front: validatedFields.data.front,
       back: validatedFields.data.back,
       visibility: validatedFields.data.visibility,
-      userId,
+      userId: user!.userId,
       flashcardId,
     });
 

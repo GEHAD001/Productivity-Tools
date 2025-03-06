@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { updateTodoQuery } from "../queries/updateTodoQuery";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export interface UpdateTodoActionParams {
   todoId: string;
@@ -14,9 +15,13 @@ export async function updateTodoAction({
   todoId,
   ...updateData
 }: UpdateTodoActionParams) {
-  await new Promise((resolve) => setTimeout(resolve, 750));
   try {
-    const result = await updateTodoQuery({ todoId, ...updateData });
+    const user = await getCurrentUser();
+    const result = await updateTodoQuery({
+      userId: user!.userId,
+      todoId,
+      ...updateData,
+    });
 
     if (!result.success) {
       return { error: true, message: result.error };

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/pagination";
 import CardList from "./CardList";
 import { dataSerialization } from "@/lib/utils";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 
 export default async function CardStream({
   flashcardId,
@@ -19,13 +20,12 @@ export default async function CardStream({
   flashcardId: string;
   page?: number;
 }) {
+  const user = await getCurrentUser();
   const {
     data: cards,
     totalPages = 1,
     currentPage = 1,
-  } = await getCardsQuery({ flashcardId, page });
-
-  console.log(cards);
+  } = await getCardsQuery({ userId: user!.userId, flashcardId, page });
 
   if (totalPages === 0) return;
 

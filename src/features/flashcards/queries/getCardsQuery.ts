@@ -11,24 +11,24 @@ interface GetCardResponse {
 
 interface GetCardsQueryParams {
   flashcardId: string;
+  userId: string;
   page?: number;
   limit?: number;
 }
 
 export async function getCardsQuery({
   flashcardId,
+  userId,
   page = 1,
   limit = 5,
 }: GetCardsQueryParams): Promise<GetCardResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 750));
-
   await connectToDB();
   try {
     const totalCards = await Card.countDocuments({ flashcard: flashcardId });
     const totalPages = Math.ceil(totalCards / limit);
     const skip = (page - 1) * limit;
 
-    const cards = await Card.find({ flashcard: flashcardId })
+    const cards = await Card.find({ flashcard: flashcardId, user: userId })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

@@ -6,12 +6,17 @@ export interface UpdateTodoParams {
   task?: string;
   state?: "pending" | "success" | "failed";
   date?: Date;
+  userId: string;
 }
 
-export async function updateTodoQuery({ todoId, ...updateData }: UpdateTodoParams) {
+export async function updateTodoQuery({
+  todoId,
+  userId,
+  ...updateData
+}: UpdateTodoParams) {
   try {
-    const todo = await Todo.findByIdAndUpdate(
-      todoId,
+    const todo = await Todo.findOneAndUpdate(
+      { _id: todoId, user: userId },
       updateData,
       { new: true }
     );

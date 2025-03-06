@@ -15,7 +15,10 @@ export async function loginUserAction(data: LoginFormFields) {
       };
     }
 
-    await createSession(result?.data?.id.toString() ?? "");
+    await createSession(
+      result?.data?.id.toString() ?? "",
+      result?.data?.username ?? ""
+    );
 
     return {
       success: true,

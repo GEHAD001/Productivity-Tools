@@ -2,12 +2,18 @@ import React, { Suspense } from "react";
 import TodoForm from "@/features/todo/components/TodoForm";
 import TodoStream from "@/features/todo/components/TodoStream";
 import { DatePickerWithContext, DateProvider } from "@/context/DateProvider";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
+import { redirect } from "next/navigation";
 
 async function TodoPage({
   searchParams,
 }: {
   searchParams: Promise<{ date?: string; page?: string }>;
 }) {
+  const user = await getCurrentUser();
+
+  if (!user) redirect("/login");
+
   const params = await searchParams;
   const date = params.date ? new Date(params.date) : new Date();
   const page = params.page ? parseInt(params.page, 10) : 1;
@@ -19,7 +25,7 @@ async function TodoPage({
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">
             Todo List
           </h1>
-          <TodoForm />
+          <TodoForm key={`${date.toString()}`} />
           <DatePickerWithContext />
         </div>
 
@@ -31,7 +37,7 @@ async function TodoPage({
             </div>
           }
         >
-          <TodoStream date={date} page={page} />
+          <TodoStream userId={user.userId} date={date} page={page} />
         </Suspense>
       </div>
     </DateProvider>

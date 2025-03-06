@@ -1,15 +1,17 @@
 import { DatePickerWithContext, DateProvider } from "@/context/DateProvider";
 import connectToDB from "@/database/connection";
 import Note from "@/database/models/Note";
-import User from "@/database/models/User";
+import { getCurrentUser } from "@/features/authentication/utils/getCurrentUser";
 import Editor from "@/features/note/components/editor";
 import React, { Suspense } from "react";
 
+// TODO: Add a loading state and parallel fetching
 export default async function NotesPage({
   searchParams,
 }: {
   searchParams: Promise<{ date?: string; page?: string }>;
 }) {
+  const user = await getCurrentUser();
   const params = await searchParams;
   const date = params.date ? new Date(params.date) : new Date();
 
@@ -32,7 +34,7 @@ export default async function NotesPage({
                 </div>
               }
             >
-              <NoteStream date={date} />
+              <NoteStream userId={user!.userId} date={date} />
             </Suspense>
           </div>
         </div>
@@ -41,7 +43,25 @@ export default async function NotesPage({
   );
 }
 
-async function NoteStream({ date = new Date() }: { date: Date }) {
+async function NoteStream({
+  userId,
+  date = new Date(),
+}: {
+  userId: string;
+  date: Date;
+}) {
+  const note = await getCreateNote(userId, date);
+
+  return (
+    <Editor
+      noteContent={note.note}
+      userId={userId}
+      noteId={String(note._id)}
+    ></Editor>
+  );
+}
+
+async function getCreateNote(userId: string, date: Date) {
   await connectToDB();
 
   const startOfDay = new Date(date);
@@ -51,30 +71,15 @@ async function NoteStream({ date = new Date() }: { date: Date }) {
   endOfDay.setHours(23, 59, 59, 999);
 
   let note = await Note.findOne({
-    $and: [
-      { user: (await User.find()).at(0)._id },
-      { date: { $gte: startOfDay, $lte: endOfDay } },
-    ],
+    $and: [{ user: userId }, { date: { $gte: startOfDay, $lte: endOfDay } }],
   });
 
   if (!note) {
     note = await Note.create({
-      user: (await User.find()).at(0)._id,
+      user: userId,
       date: new Date(date),
-      note: JSON.stringify([
-        {
-          type: "heading",
-          content: `Your note for ${date.toLocaleDateString()}`,
-        },
-      ]),
     });
   }
 
-  return (
-    <Editor
-      noteContent={note.note}
-      noteDate={note.date}
-      noteId={String(note._id)}
-    ></Editor>
-  );
+  return note;
 }

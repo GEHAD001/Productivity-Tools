@@ -1,9 +1,9 @@
 "use server";
 import Todo from "@/database/models/Todo";
 
-export async function deleteTodoQuery(todoId: string) {
+export async function deleteTodoQuery(userId: string, todoId: string) {
   try {
-    const todo = await Todo.findByIdAndDelete(todoId);
+    const todo = await Todo.findOneAndDelete({ _id: todoId, user: userId });
 
     if (!todo) {
       return { success: false, error: "Todo not found" };
