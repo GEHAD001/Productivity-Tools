@@ -21,7 +21,7 @@ export default async function NotesPage({
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
             <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">
-              Notes
+              Daily Note
             </h1>
             <DatePickerWithContext />
           </div>

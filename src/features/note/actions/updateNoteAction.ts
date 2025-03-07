@@ -15,6 +15,7 @@ export async function updateNoteAction({
   userId,
   note,
 }: StoreNoteActionParams) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     await connectToDB();
 
