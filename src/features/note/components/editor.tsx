@@ -41,7 +41,7 @@ export default function Editor({
       setIsSaving(false);
       setSeconds(secondsTrigger);
       clearInterval(secondTimer);
-    }, 5000);
+    }, secondsTrigger * 1000);
 
     // when debouncedContent change will remove the pre-setTimeout and start new one.
     return () => {
